@@ -17,11 +17,11 @@ def check_gpu_availability(model_name):
         product_listings = soup.find_all("div", class_="product-card")
         
         for product in product_listings:
-            title = product.find("h2", class_="product-title")
-            status = product.find("div", class_="stock-status")
+            title = product.find_element(By.CLASS_NAME, "nv-productTitle").get_attribute("title")
+            status = product.find_element(By.CLASS_NAME, "nv-productTitle").get_attribute("data-ctatype")
             
-            if title and model_name in title.text and status and "Out of Stock" not in status.text:
-                print(f"ALERT: {model_name} is available!")
+            if model_name in title and "buy_now" in status:
+                print(f"\033[92mALERT: {model_name} is available!\033[0m")  # Print in green
                 return
         
         print(f"{model_name} is out of stock.")
