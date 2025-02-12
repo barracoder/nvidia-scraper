@@ -1,0 +1,21 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python: GPU Stock Checker",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/gpu_stock_checker.py",
+            "args": ["RTX 5090", "--interval", "20"],
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "Python: GPU Stock Checker Browser",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/gpu_stock_checker_browser.py",
+            "args": ["RTX 4060", "--interval", "300"],
+            "console": "integratedTerminal"
+        }
+    ]
+}
