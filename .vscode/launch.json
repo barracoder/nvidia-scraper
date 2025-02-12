@@ -14,7 +14,7 @@
             "type": "python",
             "request": "launch",
             "program": "${workspaceFolder}/gpu_stock_checker_browser.py",
-            "args": ["RTX 4060", "--interval", "300"],
+            "args": ["RTX 4060", "--interval", "30"],
             "console": "integratedTerminal"
         }
     ]
