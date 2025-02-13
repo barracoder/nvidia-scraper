@@ -1,3 +1,4 @@
+import json
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 import time
@@ -12,15 +13,35 @@ def check_gpu_availability(model_name, url):
         product_listings = driver.find_elements(By.CLASS_NAME, "nv-productTile")
         
         for product in product_listings:
-            title = product.find_element(By.CLASS_NAME, "nv-productTitle").get_attribute("title")
+            title = product.find_element(By.CLASS_NAME, "nv-productTitle").get_attribute("data-producttitle")
             status = product.find_element(By.CLASS_NAME, "nv-productTitle").get_attribute("data-ctatype")
+            pid = product.find_element(By.CLASS_NAME, "nv-productTitle").get_attribute("data-pid-code")
             
-            if model_name in title and "buy_now" in status:
-                print(f"\033[92mALERT: {model_name} is available!\033[0m")  # Print in green
-                driver.quit()
-                return
-        
-        print(f"{model_name} is not available to buy.")
+            if model_name in title:
+                if "buy_now" in status:
+                    # Find the first parent element with an href attribute
+                    parent_with_href = product.find_element(By.XPATH, ".//ancestor::*[@href][1]")
+                    href = parent_with_href.get_attribute("href")
+                    print(f"\033[92mALERT: {title} is available!\033[0m")  # Print in green
+                    print(f"Nvidia Marketplace: {href}")
+
+                    # Find the product section by ID
+                    product_section = driver.find_element(By.ID, pid).get_attribute("innerHTML")
+                
+                    # Parse the JSON array
+                    product_section_json = json.loads(product_section)
+
+                    print(f"Product ID: {pid}")
+                    if product_section_json:
+                        print(f"Direct purchase links:")
+                        for section in product_section_json:
+                            print(f"Url: {section['directPurchaseLink']}")
+                            print(f"Price: {section['salePrice']}")
+                    else:
+                        print(f"Direct purchase links: Not available")
+                    print()
+                else:
+                    print(f"{title} is not available to buy.")
     
     except Exception as e:
         print(f"Error checking NVIDIA marketplace: {e}")
